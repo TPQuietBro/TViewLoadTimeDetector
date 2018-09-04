@@ -39,6 +39,7 @@
 
 static NSDate *_date = nil;
 static CADisplayLink *_timer = nil;
+static BOOL _isSameVC = NO;
 @implementation UIViewController (YYViewLoadTime)
 
 + (void)load{
@@ -47,10 +48,11 @@ static CADisplayLink *_timer = nil;
 
 - (void)my_viewDidLoad{
     // 非要监听的控制器不需要添加定时器
-    if (![self isTargetVc]) {
+    if (![self isTargetVc] || _isSameVC) {
         [self my_viewDidLoad];
         return;
     }
+    _isSameVC = YES;
     NSDate *date = [NSDate date];
     _date = date;
     [self my_viewDidLoad];
@@ -71,9 +73,10 @@ static CADisplayLink *_timer = nil;
     if (cost > 5.0f) {
         NSLog(@"%@ cost too much time to be appeared over 5s",key);
         [self fireTimer];
+        return;
     }
     // targetType表示检测subview的类型
-    YYTargetViewControllerSubviewType targetType = [YYViewLoadTimeDetectConfigureReader targetViewType:key];
+    YYTargetViewControllerSubviewType targetType = [[YYViewLoadTimeDetectConfigureReader sharedInstance] targetViewType:key];
     
     switch (targetType) {
         case YYTargetViewControllerSubviewTypeListView:// 要检测的子view是tabelView或者collectionView
@@ -110,7 +113,7 @@ static CADisplayLink *_timer = nil;
         return nil;
     }
     NSString *key = NSStringFromClass([self class]);
-    NSString *targetViewType = [YYViewLoadTimeDetectConfigureReader targetViewWithControllerKey:key];
+    NSString *targetViewType = [[YYViewLoadTimeDetectConfigureReader sharedInstance] targetViewWithControllerKey:key];
     NSArray *subviews = self.view.subviews;
     
     return [self subviewInSubviews:subviews targetViewType:targetViewType];;
@@ -142,7 +145,7 @@ static CADisplayLink *_timer = nil;
 
 // 所有需要检测的控制器名称
 - (NSArray *)targetControllerKeys{
-    NSDictionary *configDict = [YYViewLoadTimeDetectConfigureReader configureRootDict];
+    NSDictionary *configDict = [[YYViewLoadTimeDetectConfigureReader sharedInstance] configureRootDict];
     NSAssert(configDict, @"configDict is nil");
     return configDict.allKeys;
 }
@@ -152,6 +155,7 @@ static CADisplayLink *_timer = nil;
     [_timer invalidate];
     _timer = nil;
     _date = nil;
+    _isSameVC = NO;
 }
 
 @end

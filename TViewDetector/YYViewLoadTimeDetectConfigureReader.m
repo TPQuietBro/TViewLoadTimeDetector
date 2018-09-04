@@ -10,12 +10,23 @@
 
 static NSString *const kTargetSubView = @"TargetSubview";
 static NSString *const kTargetSubViewType = @"TargetSubviewType";
+static NSString *const kConfigCache = @"kConfigCache";
 @interface YYViewLoadTimeDetectConfigureReader()
-@property (nonatomic, strong) NSDictionary *cacheDict;
+@property (nonatomic, strong) NSCache *configCache;
 @end
 
 @implementation YYViewLoadTimeDetectConfigureReader
-+ (NSString *)targetViewWithControllerKey:(NSString *)key{
+
++ (instancetype)sharedInstance{
+    static YYViewLoadTimeDetectConfigureReader *singlton = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        singlton = [[self alloc] init];
+    });
+    return singlton;
+}
+
+- (NSString *)targetViewWithControllerKey:(NSString *)key{
     NSDictionary *items = [self configureRootDict];
     NSString *targetViewStr = items[key][kTargetSubView];
     return targetViewStr;
@@ -27,15 +38,40 @@ static NSString *const kTargetSubViewType = @"TargetSubviewType";
  @param key controller name
  @return viewType
  */
-+ (YYTargetViewControllerSubviewType)targetViewType:(NSString *)key{
+- (YYTargetViewControllerSubviewType)targetViewType:(NSString *)key{
     NSDictionary *items = [self configureRootDict];
     BOOL targetViewType = [items[key][kTargetSubViewType] integerValue];
     return targetViewType;
 }
 
-+ (NSDictionary *)configureRootDict{
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"ViewDetectConfigure" ofType:@"plist"];
-    NSDictionary *rootDict = [NSDictionary dictionaryWithContentsOfFile:path];
+- (NSDictionary *)configureRootDict{
+    if ([self.configCache objectForKey:kConfigCache]) {
+        return [self.configCache objectForKey:kConfigCache];
+    }
+    // plist
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"ViewDetectConfigure" ofType:@"plist"];
+//    NSDictionary *rootDict = [NSDictionary dictionaryWithContentsOfFile:path];
+    
+    // json
+    NSDictionary *rootDict = @{
+                               @"ViewController":@{
+                                       @"TargetSubview" : @"UITableView",
+                                       @"TargetSubviewType" : @(0)
+                                       },
+                               @"TempViewController":@{
+                                       @"TargetSubview" : @"TempView",
+                                       @"TargetSubviewType" : @(1)
+                                       }
+                               };
+    
+    [self.configCache setObject:rootDict forKey:kConfigCache];
     return rootDict;
+}
+
+- (NSCache *)configCache{
+    if (!_configCache) {
+        _configCache = [[NSCache alloc] init];
+    }
+    return _configCache;
 }
 @end

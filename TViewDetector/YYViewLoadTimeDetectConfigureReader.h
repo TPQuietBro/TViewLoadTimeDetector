@@ -13,7 +13,8 @@ typedef NS_ENUM(NSInteger,YYTargetViewControllerSubviewType){
 };
 
 @interface YYViewLoadTimeDetectConfigureReader : NSObject
-+ (NSString *)targetViewWithControllerKey:(NSString *)key;
-+ (YYTargetViewControllerSubviewType)targetViewType:(NSString *)key;
-+ (NSDictionary *)configureRootDict;
++ (instancetype)sharedInstance;
+- (NSString *)targetViewWithControllerKey:(NSString *)key;
+- (YYTargetViewControllerSubviewType)targetViewType:(NSString *)key;
+- (NSDictionary *)configureRootDict;
 @end
