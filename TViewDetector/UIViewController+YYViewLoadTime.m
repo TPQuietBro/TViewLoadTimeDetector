@@ -116,14 +116,16 @@ static BOOL _isSameVC = NO;
     NSString *targetViewType = [[YYViewLoadTimeDetectConfigureReader sharedInstance] targetViewWithControllerKey:key];
     NSArray *subviews = self.view.subviews;
     
-    if ([self.view isKindOfClass:NSClassFromString(targetViewType)]) {
-        return self.view;
-    }
+
     
     return [self subviewInSubviews:subviews targetViewType:targetViewType];;
 }
 // 递归获取子view
 - (UIView *)subviewInSubviews:(NSArray *)subviews targetViewType:(NSString *)targetViewType{
+    // 判断self.view的类型是因为可能重写loadview或者直接将self.view强制赋值
+    if ([self.view isKindOfClass:NSClassFromString(targetViewType)]) {
+        return self.view;
+    }
     for (UIView *subView in subviews) {
         if ([subView isKindOfClass:NSClassFromString(targetViewType)]) {
             return subView;
