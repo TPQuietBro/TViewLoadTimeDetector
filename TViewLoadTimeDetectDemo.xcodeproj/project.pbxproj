@@ -10,7 +10,6 @@
 		AF7DB1A3213538A700A7CB9F /* TempView.m in Sources */ = {isa = PBXBuildFile; fileRef = AF7DB1A2213538A700A7CB9F /* TempView.m */; };
 		AF7DB1A6213538CB00A7CB9F /* TempViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF7DB1A5213538CB00A7CB9F /* TempViewController.m */; };
 		AF7DB1B021356C6600A7CB9F /* UIViewController+YYViewLoadTime.m in Sources */ = {isa = PBXBuildFile; fileRef = AF7DB1AA21356C6600A7CB9F /* UIViewController+YYViewLoadTime.m */; };
-		AF7DB1B221356C6600A7CB9F /* UIView+YYViewInScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = AF7DB1AE21356C6600A7CB9F /* UIView+YYViewInScreen.m */; };
 		AF9374BC212FE3F700A7C37A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF9374BB212FE3F700A7C37A /* AppDelegate.m */; };
 		AF9374BF212FE3F800A7C37A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF9374BE212FE3F800A7C37A /* ViewController.m */; };
 		AF9374C2212FE3F800A7C37A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF9374C0212FE3F800A7C37A /* Main.storyboard */; };
@@ -20,6 +19,12 @@
 		AF9374D2212FE4E100A7C37A /* TempCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF9374D1212FE4E100A7C37A /* TempCell.m */; };
 		AF9374DF213004EB00A7C37A /* ViewDetectConfigure.plist in Resources */ = {isa = PBXBuildFile; fileRef = AF9374DE213004EB00A7C37A /* ViewDetectConfigure.plist */; };
 		AF9374E22130064B00A7C37A /* YYViewLoadTimeDetectConfigureReader.m in Sources */ = {isa = PBXBuildFile; fileRef = AF9374E12130064B00A7C37A /* YYViewLoadTimeDetectConfigureReader.m */; };
+		AFD7585A21BFB9EF0013FD9F /* TBaseExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = AFD7585921BFB9EF0013FD9F /* TBaseExtension.m */; };
+		AFD7585E21BFBAA60013FD9F /* TListViewExtesion.m in Sources */ = {isa = PBXBuildFile; fileRef = AFD7585D21BFBAA60013FD9F /* TListViewExtesion.m */; };
+		AFD7586121BFBABB0013FD9F /* TNormalViewExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = AFD7586021BFBABB0013FD9F /* TNormalViewExtension.m */; };
+		AFD7586421BFBACE0013FD9F /* TWebviewExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = AFD7586321BFBACE0013FD9F /* TWebviewExtension.m */; };
+		AFD7586821BFBC080013FD9F /* UIView+YYViewInScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = AFD7586721BFBC080013FD9F /* UIView+YYViewInScreen.m */; };
+		AFD7586B21BFBC430013FD9F /* TExtensionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AFD7586A21BFBC430013FD9F /* TExtensionManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,8 +33,6 @@
 		AF7DB1A4213538CB00A7CB9F /* TempViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TempViewController.h; sourceTree = "<group>"; };
 		AF7DB1A5213538CB00A7CB9F /* TempViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TempViewController.m; sourceTree = "<group>"; };
 		AF7DB1AA21356C6600A7CB9F /* UIViewController+YYViewLoadTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+YYViewLoadTime.m"; sourceTree = "<group>"; };
-		AF7DB1AD21356C6600A7CB9F /* UIView+YYViewInScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+YYViewInScreen.h"; sourceTree = "<group>"; };
-		AF7DB1AE21356C6600A7CB9F /* UIView+YYViewInScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+YYViewInScreen.m"; sourceTree = "<group>"; };
 		AF7DB1AF21356C6600A7CB9F /* UIViewController+YYViewLoadTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+YYViewLoadTime.h"; sourceTree = "<group>"; };
 		AF9374B7212FE3F700A7C37A /* TViewLoadTimeDetectDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TViewLoadTimeDetectDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF9374BA212FE3F700A7C37A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -46,6 +49,20 @@
 		AF9374DE213004EB00A7C37A /* ViewDetectConfigure.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ViewDetectConfigure.plist; sourceTree = "<group>"; };
 		AF9374E02130064B00A7C37A /* YYViewLoadTimeDetectConfigureReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YYViewLoadTimeDetectConfigureReader.h; sourceTree = "<group>"; };
 		AF9374E12130064B00A7C37A /* YYViewLoadTimeDetectConfigureReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YYViewLoadTimeDetectConfigureReader.m; sourceTree = "<group>"; };
+		AFD7585721BFB9790013FD9F /* TViewLoadTimeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TViewLoadTimeProtocol.h; sourceTree = "<group>"; };
+		AFD7585821BFB9EF0013FD9F /* TBaseExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBaseExtension.h; sourceTree = "<group>"; };
+		AFD7585921BFB9EF0013FD9F /* TBaseExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBaseExtension.m; sourceTree = "<group>"; };
+		AFD7585B21BFBA420013FD9F /* Defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
+		AFD7585C21BFBAA60013FD9F /* TListViewExtesion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TListViewExtesion.h; sourceTree = "<group>"; };
+		AFD7585D21BFBAA60013FD9F /* TListViewExtesion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TListViewExtesion.m; sourceTree = "<group>"; };
+		AFD7585F21BFBABB0013FD9F /* TNormalViewExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TNormalViewExtension.h; sourceTree = "<group>"; };
+		AFD7586021BFBABB0013FD9F /* TNormalViewExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TNormalViewExtension.m; sourceTree = "<group>"; };
+		AFD7586221BFBACE0013FD9F /* TWebviewExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWebviewExtension.h; sourceTree = "<group>"; };
+		AFD7586321BFBACE0013FD9F /* TWebviewExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TWebviewExtension.m; sourceTree = "<group>"; };
+		AFD7586621BFBC080013FD9F /* UIView+YYViewInScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+YYViewInScreen.h"; sourceTree = "<group>"; };
+		AFD7586721BFBC080013FD9F /* UIView+YYViewInScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+YYViewInScreen.m"; sourceTree = "<group>"; };
+		AFD7586921BFBC430013FD9F /* TExtensionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TExtensionManager.h; sourceTree = "<group>"; };
+		AFD7586A21BFBC430013FD9F /* TExtensionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TExtensionManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,16 +118,44 @@
 		AF9374DA212FE84100A7C37A /* TViewDetector */ = {
 			isa = PBXGroup;
 			children = (
+				AFD7586521BFBC080013FD9F /* TUtil */,
+				AFD7585621BFB9580013FD9F /* TViewLoadTimeExtensions */,
 				AF7DB1AF21356C6600A7CB9F /* UIViewController+YYViewLoadTime.h */,
 				AF7DB1AA21356C6600A7CB9F /* UIViewController+YYViewLoadTime.m */,
-				AF7DB1AD21356C6600A7CB9F /* UIView+YYViewInScreen.h */,
-				AF7DB1AE21356C6600A7CB9F /* UIView+YYViewInScreen.m */,
-				AF9374E02130064B00A7C37A /* YYViewLoadTimeDetectConfigureReader.h */,
-				AF9374E12130064B00A7C37A /* YYViewLoadTimeDetectConfigureReader.m */,
-				AF9374DE213004EB00A7C37A /* ViewDetectConfigure.plist */,
 			);
 			path = TViewDetector;
 			sourceTree = SOURCE_ROOT;
+		};
+		AFD7585621BFB9580013FD9F /* TViewLoadTimeExtensions */ = {
+			isa = PBXGroup;
+			children = (
+				AFD7585821BFB9EF0013FD9F /* TBaseExtension.h */,
+				AFD7585921BFB9EF0013FD9F /* TBaseExtension.m */,
+				AFD7585C21BFBAA60013FD9F /* TListViewExtesion.h */,
+				AFD7585D21BFBAA60013FD9F /* TListViewExtesion.m */,
+				AFD7585F21BFBABB0013FD9F /* TNormalViewExtension.h */,
+				AFD7586021BFBABB0013FD9F /* TNormalViewExtension.m */,
+				AFD7586221BFBACE0013FD9F /* TWebviewExtension.h */,
+				AFD7586321BFBACE0013FD9F /* TWebviewExtension.m */,
+			);
+			path = TViewLoadTimeExtensions;
+			sourceTree = "<group>";
+		};
+		AFD7586521BFBC080013FD9F /* TUtil */ = {
+			isa = PBXGroup;
+			children = (
+				AF9374E02130064B00A7C37A /* YYViewLoadTimeDetectConfigureReader.h */,
+				AF9374E12130064B00A7C37A /* YYViewLoadTimeDetectConfigureReader.m */,
+				AF9374DE213004EB00A7C37A /* ViewDetectConfigure.plist */,
+				AFD7585721BFB9790013FD9F /* TViewLoadTimeProtocol.h */,
+				AFD7585B21BFBA420013FD9F /* Defines.h */,
+				AFD7586621BFBC080013FD9F /* UIView+YYViewInScreen.h */,
+				AFD7586721BFBC080013FD9F /* UIView+YYViewInScreen.m */,
+				AFD7586921BFBC430013FD9F /* TExtensionManager.h */,
+				AFD7586A21BFBC430013FD9F /* TExtensionManager.m */,
+			);
+			path = TUtil;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -186,11 +231,16 @@
 				AF9374BF212FE3F800A7C37A /* ViewController.m in Sources */,
 				AF7DB1A3213538A700A7CB9F /* TempView.m in Sources */,
 				AF7DB1A6213538CB00A7CB9F /* TempViewController.m in Sources */,
+				AFD7585E21BFBAA60013FD9F /* TListViewExtesion.m in Sources */,
+				AFD7585A21BFB9EF0013FD9F /* TBaseExtension.m in Sources */,
 				AF9374CA212FE3F900A7C37A /* main.m in Sources */,
-				AF7DB1B221356C6600A7CB9F /* UIView+YYViewInScreen.m in Sources */,
+				AFD7586B21BFBC430013FD9F /* TExtensionManager.m in Sources */,
+				AFD7586421BFBACE0013FD9F /* TWebviewExtension.m in Sources */,
 				AF9374E22130064B00A7C37A /* YYViewLoadTimeDetectConfigureReader.m in Sources */,
 				AF7DB1B021356C6600A7CB9F /* UIViewController+YYViewLoadTime.m in Sources */,
+				AFD7586821BFBC080013FD9F /* UIView+YYViewInScreen.m in Sources */,
 				AF9374BC212FE3F700A7C37A /* AppDelegate.m in Sources */,
+				AFD7586121BFBABB0013FD9F /* TNormalViewExtension.m in Sources */,
 				AF9374D2212FE4E100A7C37A /* TempCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

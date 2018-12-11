@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-typedef NS_ENUM(NSInteger,YYTargetViewControllerSubviewType){
-    YYTargetViewControllerSubviewTypeListView = 0,
-    YYTargetViewControllerSubviewTypeOtherView
-};
+#import "Defines.h"
+
+#define ConfigureReader [YYViewLoadTimeDetectConfigureReader sharedInstance]
 
 @interface YYViewLoadTimeDetectConfigureReader : NSObject
 + (instancetype)sharedInstance;
 - (NSString *)targetViewWithControllerKey:(NSString *)key;
-- (YYTargetViewControllerSubviewType)targetViewType:(NSString *)key;
+- (YYViewLoadTimeReportType)targetViewType:(NSString *)key;
 - (NSDictionary *)configureRootDict;
+- (NSArray *)allExtensions;
 @end

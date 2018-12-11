@@ -9,6 +9,7 @@
 #import "UIViewController+YYViewLoadTime.h"
 #import "YYViewLoadTimeDetectConfigureReader.h"
 #import "UIView+YYViewInScreen.h"
+#import "TExtensionManager.h"
 
 @implementation NSObject (Swizzling)
 
@@ -37,86 +38,24 @@
 }
 @end
 
+
 static NSDate *_date = nil;
 static CADisplayLink *_timer = nil;
-static BOOL _isSameVC = NO;
-@implementation UIViewController (YYViewLoadTime)
+static UIViewController *_preViewController = nil;
+YYViewLoadTimeReportType _targetType = -1;
 
-+ (void)load{
-    [self swizzleSEL:@selector(viewDidLoad) withSEL:@selector(my_viewDidLoad)];
+@implementation UIViewController (Util)
+
+- (void)preInit{
+    UIViewController *selfInstance = self;
+    _preViewController = selfInstance;
 }
 
-- (void)my_viewDidLoad{
-    // 非要监听的控制器不需要添加定时器
-    if (![self isTargetVc] || _isSameVC) {
-        [self my_viewDidLoad];
-        return;
-    }
-    _isSameVC = YES;
-    NSDate *date = [NSDate date];
-    _date = date;
-    [self my_viewDidLoad];
-    
-    CADisplayLink *timer = [CADisplayLink displayLinkWithTarget:self selector:@selector(detecting:)];
-    [timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    _timer = timer;
-    
-    NSLog(@"%@ start timer",[self class]);
-}
-
-// 通过检测两种类型的view来体现加载时间
-- (void)detecting:(CADisplayLink *)timer{
-    
-    NSString *key = NSStringFromClass([self class]);
-    // 如果检测到消耗时间大于5s就提个醒,5s可以是其他值
-    NSTimeInterval cost = [[NSDate date] timeIntervalSinceDate:_date];
-    if (cost > 5.0f) {
-        NSLog(@"%@ cost too much time to be appeared over 5s",key);
-        [self fireTimer];
-        return;
-    }
-    // targetType表示检测subview的类型
-    YYTargetViewControllerSubviewType targetType = [[YYViewLoadTimeDetectConfigureReader sharedInstance] targetViewType:key];
-    
-    switch (targetType) {
-        case YYTargetViewControllerSubviewTypeListView:// 要检测的子view是tabelView或者collectionView
-        {
-            id subview = [self targetView];
-            if ([subview isKindOfClass:[UITableView class]] || [subview isKindOfClass:[UICollectionView class]]) {
-                // 通过可见的cell来确定是否加载完成
-                NSArray *visibleCell = (NSArray *)[subview performSelector:@selector(visibleCells)];
-                if (visibleCell.count > 0) {
-                    NSLog(@"%@ cost %lf to be appeared",key,cost);
-                    [self fireTimer];
-                }
-            } else {
-                [self fireTimer];
-            }
-        }
-            break;
-        case YYTargetViewControllerSubviewTypeOtherView://
-        {
-            UIView *subview = [self targetView];
-            // 通过是否显示在屏幕上判断
-            if ([subview isDisplayedInScreen]) {
-                NSLog(@"%@ cost %lf to be appeared",key,cost);
-                [self fireTimer];
-            }
-        }
-            break;
-    }
-}
 // 找到需要检测的子view,递归实现
 - (UIView *)targetView{
-    if (![self isTargetVc]) {
-        [self fireTimer];
-        return nil;
-    }
     NSString *key = NSStringFromClass([self class]);
-    NSString *targetViewType = [[YYViewLoadTimeDetectConfigureReader sharedInstance] targetViewWithControllerKey:key];
+    NSString *targetViewType = [ConfigureReader targetViewWithControllerKey:key];
     NSArray *subviews = self.view.subviews;
-    
-
     
     return [self subviewInSubviews:subviews targetViewType:targetViewType];;
 }
@@ -131,7 +70,7 @@ static BOOL _isSameVC = NO;
             return subView;
         } else {
             while (subView.subviews) {
-               return [self subviewInSubviews:subView.subviews targetViewType:targetViewType];
+                return [self subviewInSubviews:subView.subviews targetViewType:targetViewType];
             }
         }
     }
@@ -151,9 +90,21 @@ static BOOL _isSameVC = NO;
 
 // 所有需要检测的控制器名称
 - (NSArray *)targetControllerKeys{
-    NSDictionary *configDict = [[YYViewLoadTimeDetectConfigureReader sharedInstance] configureRootDict];
+    NSDictionary *configDict = [ConfigureReader configureRootDict];
     NSAssert(configDict, @"configDict is nil");
     return configDict.allKeys;
+}
+
+- (void)addExtensions{
+    if ([_preViewController isEqual:self]) {
+        return;
+    }
+    UIViewController *selfInstance = self;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        ExtentionManager.detectedController = selfInstance;
+        [ExtentionManager addDetectingExtensions:[ConfigureReader allExtensions]];
+    });
 }
 
 // 销毁定时器
@@ -161,7 +112,73 @@ static BOOL _isSameVC = NO;
     [_timer invalidate];
     _timer = nil;
     _date = nil;
-    _isSameVC = NO;
+    _targetType = YYViewLoadTimeReportTypeInit;
+}
+
+@end
+
+@implementation UIViewController (YYViewLoadTime)
+
++ (void)load{
+    [self swizzleSEL:@selector(viewDidLoad) withSEL:@selector(my_viewDidLoad)];
+}
+
+- (void)my_viewDidLoad{
+    // 非要监听的控制器不需要添加定时器
+    if (![self isTargetVc] || [_preViewController isEqual:self]) {
+        [self my_viewDidLoad];
+        return;
+    }
+    [self fireTimer];
+    
+    [self addExtensions];
+    
+    [self preInit];
+    
+    NSDate *date = [NSDate date];
+    _date = date;
+    [self my_viewDidLoad];
+    
+    CADisplayLink *timer = [CADisplayLink displayLinkWithTarget:self selector:@selector(detecting:)];
+    [timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    _timer = timer;
+    
+    NSLog(@"%@ start timer",[self class]);
+}
+
+// 通过检测两种类型的view来体现加载时间
+- (void)detecting:(CADisplayLink *)timer{
+    
+    NSString *key = NSStringFromClass([self class]);
+    // 如果检测到消耗时间大于5s就提个醒,5s可以是其他值
+    NSTimeInterval cost = [[NSDate date] timeIntervalSinceDate:_date];
+    
+    NSDictionary *userData = @{}; // 上报的附加信息
+    if (cost > 5.0f) {
+        NSLog(@"%@ cost too much time to be appeared over 5s",key);
+        [self fireTimer];
+        [ExtentionManager recieveReportDataByCost:cost uri:key userData:userData];
+        return;
+    }
+    // targetType表示检测subview的类型
+    if (_targetType == YYViewLoadTimeReportTypeInit) {
+        _targetType = [ConfigureReader targetViewType:key];
+    }
+    
+    id subview = [self targetView];
+    
+    // 是否有其他阻断条件
+    if (![ExtentionManager allowDetectingByType:_targetType]) {
+        [self fireTimer];
+        return;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [ExtentionManager performWithTargetView:subview targetType:_targetType completeHandler:^(id  _Nonnull value) {
+        __weak typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf fireTimer];
+        [ExtentionManager recieveReportDataByCost:cost uri:key userData:userData];
+    }];
 }
 
 @end

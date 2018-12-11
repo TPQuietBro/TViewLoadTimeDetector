@@ -11,6 +11,7 @@
 static NSString *const kTargetSubView = @"TargetSubview";
 static NSString *const kTargetSubViewType = @"TargetSubviewType";
 static NSString *const kConfigCache = @"kConfigCache";
+static NSString *const kYYViewLoadTimeExtensions = @"YYViewLoadTimeExtension";
 @interface YYViewLoadTimeDetectConfigureReader()
 @property (nonatomic, strong) NSCache *configCache;
 @end
@@ -38,10 +39,18 @@ static NSString *const kConfigCache = @"kConfigCache";
  @param key controller name
  @return viewType
  */
-- (YYTargetViewControllerSubviewType)targetViewType:(NSString *)key{
+- (YYViewLoadTimeReportType)targetViewType:(NSString *)key{
     NSDictionary *items = [self configureRootDict];
     BOOL targetViewType = [items[key][kTargetSubViewType] integerValue];
     return targetViewType;
+}
+
+- (NSArray *)allExtensions{
+    NSArray *extensions = [self configureRootDict][kYYViewLoadTimeExtensions];
+    if (extensions.count == 0) {
+        return nil;
+    }
+    return extensions;
 }
 
 - (NSDictionary *)configureRootDict{
@@ -61,7 +70,12 @@ static NSString *const kConfigCache = @"kConfigCache";
                                @"TempViewController":@{
                                        @"TargetSubview" : @"TempView",
                                        @"TargetSubviewType" : @(1)
-                                       }
+                                       },
+                               @"YYViewLoadTimeExtension":@[
+                                       @"TListViewExtesion",
+                                       @"TNormalViewExtension",
+                                       @"TWebviewExtension"
+                                       ]
                                };
     
     [self.configCache setObject:rootDict forKey:kConfigCache];
