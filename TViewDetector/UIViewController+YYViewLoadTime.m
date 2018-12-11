@@ -100,9 +100,9 @@ YYViewLoadTimeReportType _targetType = -1;
         return;
     }
     UIViewController *selfInstance = self;
+    ExtentionManager.detectedController = selfInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        ExtentionManager.detectedController = selfInstance;
         [ExtentionManager addDetectingExtensions:[ConfigureReader allExtensions]];
     });
 }
