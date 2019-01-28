@@ -41,7 +41,7 @@ static NSString *const kYYViewLoadTimeExtensions = @"YYViewLoadTimeExtension";
  */
 - (YYViewLoadTimeReportType)targetViewType:(NSString *)key{
     NSDictionary *items = [self configureRootDict];
-    BOOL targetViewType = [items[key][kTargetSubViewType] integerValue];
+    YYViewLoadTimeReportType targetViewType = [items[key][kTargetSubViewType] integerValue];
     return targetViewType;
 }
 
