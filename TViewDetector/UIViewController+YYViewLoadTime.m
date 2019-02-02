@@ -91,7 +91,9 @@ YYViewLoadTimeReportType _targetType = -1;
 // 所有需要检测的控制器名称
 - (NSArray *)targetControllerKeys{
     NSDictionary *configDict = [ConfigureReader configureRootDict];
+#ifdef debug
     NSAssert(configDict, @"configDict is nil");
+#endif
     return configDict.allKeys;
 }
 
@@ -109,8 +111,10 @@ YYViewLoadTimeReportType _targetType = -1;
 
 // 销毁定时器
 - (void)fireTimer{
-    [_timer invalidate];
-    _timer = nil;
+    if (_timer) {
+        [_timer invalidate];
+        _timer = nil;
+    }
     _date = nil;
     _targetType = YYViewLoadTimeReportTypeInit;
 }

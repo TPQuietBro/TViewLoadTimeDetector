@@ -146,9 +146,9 @@
 			children = (
 				AFD7585721BFB9790013FD9F /* TViewLoadTimeProtocol.h */,
 				AFD7585B21BFBA420013FD9F /* Defines.h */,
+				AF9374DE213004EB00A7C37A /* ViewDetectConfigure.plist */,
 				AF9374E02130064B00A7C37A /* YYViewLoadTimeDetectConfigureReader.h */,
 				AF9374E12130064B00A7C37A /* YYViewLoadTimeDetectConfigureReader.m */,
-				AF9374DE213004EB00A7C37A /* ViewDetectConfigure.plist */,
 				AFD7586621BFBC080013FD9F /* UIView+YYViewInScreen.h */,
 				AFD7586721BFBC080013FD9F /* UIView+YYViewInScreen.m */,
 				AFD7586921BFBC430013FD9F /* TExtensionManager.h */,
