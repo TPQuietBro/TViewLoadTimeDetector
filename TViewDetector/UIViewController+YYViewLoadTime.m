@@ -53,7 +53,7 @@ static UIView *_targetView = nil;
     _preViewController = selfInstance;
 }
 
-// 找到需要检测的子view,递归实现
+// 找到需要检测的子view,递归实现,注意子控件深度,尽量浅,避免大于每帧的16.67ms
 - (UIView *)targetView{
     if (_targetView) {
         return _targetView;

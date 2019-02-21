@@ -47,6 +47,7 @@
 }
 
 - (void)performWithTargetView:(id)targetView targetType:(NSInteger)type completeHandler:(nonnull void (^)(id value))handler{
+    // 如果要做得给灵活,这里的枚举都可以后台制定
     if (type < YYViewLoadTimeReportTypeInit || type > YYViewLoadTimeReportTypeWebView) {
         return;
     }
