@@ -117,7 +117,7 @@ static UIView *_targetView = nil;
 // 所有需要检测的控制器名称
 - (NSArray *)targetControllerKeys{
     NSDictionary *configDict = [ConfigureReader configureRootDict];
-#ifdef debug
+#if debug
     NSAssert(configDict, @"configDict is nil");
 #endif
     return configDict.allKeys;
@@ -170,7 +170,9 @@ static UIView *_targetView = nil;
 @implementation UIViewController (YYViewLoadTime)
 
 + (void)load{
+#if DEBUG
     [self swizzleSEL:@selector(viewDidLoad) withSEL:@selector(my_viewDidLoad)];
+#endif
 }
 
 - (void)my_viewDidLoad{
