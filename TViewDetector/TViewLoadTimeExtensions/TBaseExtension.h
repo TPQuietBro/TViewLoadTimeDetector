@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TViewLoadTimeProtocol.h"
 #import "Defines.h"
-#import "UIView+YYViewInScreen.h"
+#import "UIView+ViewInScreen.h"
 #import "YYViewLoadTimeDetectConfigureReader.h"
 #import "TExtensionManager.h"
 

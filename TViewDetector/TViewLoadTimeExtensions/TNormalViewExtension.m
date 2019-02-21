@@ -7,7 +7,7 @@
 //
 
 #import "TNormalViewExtension.h"
-#import "UIView+YYViewInScreen.h"
+#import "UIView+ViewInScreen.h"
 
 @implementation TNormalViewExtension
 - (void)excuteConditionWithTargetView:(UIView *)targetView completionBlock:(void (^)(id _Nonnull))block{

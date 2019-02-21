@@ -6,9 +6,9 @@
 //  Copyright © 2018年 YY. All rights reserved.
 //
 
-#import "UIView+YYViewInScreen.h"
+#import "UIView+ViewInScreen.h"
 
-@implementation UIView (YYViewInScreen)
+@implementation UIView (ViewInScreen)
 - (BOOL)isDisplayedInScreen
 {
     if (self == nil) {

@@ -8,7 +8,7 @@
 
 #import "UIViewController+YYViewLoadTime.h"
 #import "YYViewLoadTimeDetectConfigureReader.h"
-#import "UIView+YYViewInScreen.h"
+#import "UIView+ViewInScreen.h"
 #import "TExtensionManager.h"
 
 @implementation NSObject (Swizzling)
@@ -159,8 +159,8 @@ static UIView *_targetView = nil;
     _date = date;
 }
 
-- (void)startTimer{
-    CADisplayLink *timer = [CADisplayLink displayLinkWithTarget:self selector:@selector(detecting:)];
+- (void)startTimerWithSelector:(SEL)selector{
+    CADisplayLink *timer = [CADisplayLink displayLinkWithTarget:self selector:selector];
     [timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     _timer = timer;
 }
@@ -187,7 +187,7 @@ static UIView *_targetView = nil;
     
     [self initDate];
     
-    [self startTimer];
+    [self startTimerWithSelector:@selector(detecting:)];
     
     [self my_viewDidLoad];
     
