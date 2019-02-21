@@ -7,6 +7,7 @@
 //
 
 #import "TBaseExtension.h"
+
 #define DEFAULT_CONSUME_LIMIT 5
 
 @implementation TBaseExtension
@@ -25,4 +26,28 @@
         NSLog(@"warning: %@ targetView %@ cost over 5s",_uri,[_targetView class]);
     }
 }
+
+- (BOOL)emptyViewIsShownInView:(UIView *)view{
+    UIView *emptyView = [self emptyViewInView:view];
+    if ([emptyView isDisplayedInScreen]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (UIView *)emptyViewInView:(UIView *)view{
+    NSString *key = NSStringFromClass([ExtentionManager.detectedController class]);
+    for (UIView *subview in view.subviews) {
+        NSString *emptyViewType = NSStringFromClass([subview class]);
+        if ([[ConfigureReader targetEmptyViewWithControllerKey:key] isEqualToString:emptyViewType]) {
+            return subview;
+        }
+    }
+    // 先广度再深度
+    for (UIView *subview in view.subviews) {
+        [self emptyViewInView:subview];
+    }
+    return nil;
+}
+
 @end

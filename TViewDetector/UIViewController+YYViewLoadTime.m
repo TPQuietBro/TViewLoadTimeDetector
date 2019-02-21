@@ -43,6 +43,8 @@ static NSDate *_date = nil;
 static CADisplayLink *_timer = nil;
 static UIViewController *_preViewController = nil;
 YYViewLoadTimeReportType _targetType = -1;
+static NSString *_parentVc = nil;
+static UIView *_targetView = nil;
 
 @implementation UIViewController (Util)
 
@@ -53,8 +55,11 @@ YYViewLoadTimeReportType _targetType = -1;
 
 // 找到需要检测的子view,递归实现
 - (UIView *)targetView{
+    if (_targetView) {
+        return _targetView;
+    }
     NSString *key = NSStringFromClass([self class]);
-    NSString *targetViewType = [ConfigureReader targetViewWithControllerKey:key];
+    NSString *targetViewType = [ConfigureReader targetViewWithControllerKey:_parentVc ? _parentVc : key];
     NSArray *subviews = self.view.subviews;
     
     return [self subviewInSubviews:subviews targetViewType:targetViewType];;
@@ -63,15 +68,20 @@ YYViewLoadTimeReportType _targetType = -1;
 - (UIView *)subviewInSubviews:(NSArray *)subviews targetViewType:(NSString *)targetViewType{
     // 判断self.view的类型是因为可能重写loadview或者直接将self.view强制赋值
     if ([self.view isKindOfClass:NSClassFromString(targetViewType)]) {
+        _targetView = self.view;
         return self.view;
     }
+    // 广度遍历
     for (UIView *subView in subviews) {
         if ([subView isKindOfClass:NSClassFromString(targetViewType)]) {
+            _targetView = subView;
             return subView;
-        } else {
-            while (subView.subviews) {
-                return [self subviewInSubviews:subView.subviews targetViewType:targetViewType];
-            }
+        }
+    }
+    // 深度遍历 ,到这里可能会造成误差,所以subview的层级最好是一层
+    for (UIView *subview in subviews) {
+        while (subview.subviews) {
+            return [self subviewInSubviews:subview.subviews targetViewType:targetViewType];
         }
     }
     return nil;
@@ -81,11 +91,27 @@ YYViewLoadTimeReportType _targetType = -1;
 - (BOOL)isTargetVc{
     NSArray *allKeys = [self targetControllerKeys];
     NSString *key = NSStringFromClass([self class]);
-    if (![allKeys containsObject:key]) {
-        NSLog(@"%@ is not targetVc",[self class]);
-        return NO;
+    if ([allKeys containsObject:key]) {
+        return YES;
     }
-    return YES;
+    // 如果想统一处理继承自某个父控制器的页面
+    BOOL isParentVcContained = [self isParentViewControllerContainedWithAllKeys:allKeys subClass:[self class]];
+    if (isParentVcContained) {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)isParentViewControllerContainedWithAllKeys:(NSArray *)allKeys subClass:(Class)subClass{
+    if (subClass.superclass) {
+        NSString *parentVc = NSStringFromClass(subClass.superclass);
+        if ([allKeys containsObject:parentVc]) {
+            _parentVc = parentVc;
+            return YES;
+        }
+        [self isParentViewControllerContainedWithAllKeys:allKeys subClass:subClass.superclass];
+    }
+    return NO;
 }
 
 // 所有需要检测的控制器名称
@@ -117,6 +143,26 @@ YYViewLoadTimeReportType _targetType = -1;
     }
     _date = nil;
     _targetType = YYViewLoadTimeReportTypeInit;
+    _targetView = nil;
+    _preViewController = nil;
+}
+
+- (BOOL)hasFilteredCustomizeConditions{
+    if (![self isTargetVc] || [_preViewController isEqual:self]) {
+        return NO;
+    }
+    return YES;
+}
+
+- (void)initDate{
+    NSDate *date = [NSDate date];
+    _date = date;
+}
+
+- (void)startTimer{
+    CADisplayLink *timer = [CADisplayLink displayLinkWithTarget:self selector:@selector(detecting:)];
+    [timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    _timer = timer;
 }
 
 @end
@@ -129,7 +175,7 @@ YYViewLoadTimeReportType _targetType = -1;
 
 - (void)my_viewDidLoad{
     // 非要监听的控制器不需要添加定时器
-    if (![self isTargetVc] || [_preViewController isEqual:self]) {
+    if (![self hasFilteredCustomizeConditions]) {
         [self my_viewDidLoad];
         return;
     }
@@ -139,37 +185,34 @@ YYViewLoadTimeReportType _targetType = -1;
     
     [self preInit];
     
-    NSDate *date = [NSDate date];
-    _date = date;
-    [self my_viewDidLoad];
+    [self initDate];
     
-    CADisplayLink *timer = [CADisplayLink displayLinkWithTarget:self selector:@selector(detecting:)];
-    [timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    _timer = timer;
+    [self startTimer];
+    
+    [self my_viewDidLoad];
     
     NSLog(@"%@ start timer",[self class]);
 }
 
-// 通过检测两种类型的view来体现加载时间
+// 检测方法
 - (void)detecting:(CADisplayLink *)timer{
     
+    id subview = [self targetView];
     NSString *key = NSStringFromClass([self class]);
     // 如果检测到消耗时间大于5s就提个醒,5s可以是其他值
     NSTimeInterval cost = [[NSDate date] timeIntervalSinceDate:_date];
     
     NSDictionary *userData = @{}; // 上报的附加信息
     if (cost > 5.0f) {
-        NSLog(@"%@ cost too much time to be appeared over 5s",key);
         [self fireTimer];
         [ExtentionManager recieveReportDataByCost:cost uri:key userData:userData];
         return;
     }
     // targetType表示检测subview的类型
     if (_targetType == YYViewLoadTimeReportTypeInit) {
-        _targetType = [ConfigureReader targetViewType:key];
+        _targetType = [ConfigureReader targetViewType:_parentVc ? _parentVc :key];
+        _parentVc = nil;
     }
-    
-    id subview = [self targetView];
     
     // 是否有其他阻断条件
     if (![ExtentionManager allowDetectingByType:_targetType]) {

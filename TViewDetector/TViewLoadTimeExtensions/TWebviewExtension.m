@@ -22,6 +22,10 @@
         if (webview.request.URL.absoluteString.length != 0 && !webview.isLoading) {
             SAFE_BLOCK(block,targetView);
         }
+    } else {
+        if ([self emptyViewIsShownInView:self.targetView]) {
+            SAFE_BLOCK(block,@"");
+        }
     }
 }
 

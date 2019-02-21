@@ -15,6 +15,12 @@
     // 通过是否显示在屏幕上判断
     if ([targetView isDisplayedInScreen]) {
         SAFE_BLOCK(block,@"");
+    } else {
+        if (self.targetView && [self emptyViewIsShownInView:self.targetView]) {
+            SAFE_BLOCK(block,@"");
+        } else if ([self emptyViewIsShownInView:ExtentionManager.detectedController.view]) {
+            SAFE_BLOCK(block,@"");
+        }
     }
 }
 

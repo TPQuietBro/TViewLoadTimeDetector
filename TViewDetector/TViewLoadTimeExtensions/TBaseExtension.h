@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "TViewLoadTimeProtocol.h"
 #import "Defines.h"
+#import "UIView+YYViewInScreen.h"
+#import "YYViewLoadTimeDetectConfigureReader.h"
+#import "TExtensionManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *uri;
 @property (nonatomic, strong) UIView *targetView;
 - (void)reportData NS_REQUIRES_SUPER;
+- (BOOL)emptyViewIsShownInView:(UIView *)view;
 @end
 
 NS_ASSUME_NONNULL_END

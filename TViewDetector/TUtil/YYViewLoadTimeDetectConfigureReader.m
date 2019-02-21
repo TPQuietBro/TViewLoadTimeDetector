@@ -12,6 +12,7 @@ static NSString *const kTargetSubView = @"TargetSubview";
 static NSString *const kTargetSubViewType = @"TargetSubviewType";
 static NSString *const kConfigCache = @"kConfigCache";
 static NSString *const kYYViewLoadTimeExtensions = @"YYViewLoadTimeExtension";
+static NSString *const kTargetSubViewEmpty = @"TargetEmptyViewType";
 @interface YYViewLoadTimeDetectConfigureReader()
 @property (nonatomic, strong) NSCache *configCache;
 @end
@@ -53,6 +54,12 @@ static NSString *const kYYViewLoadTimeExtensions = @"YYViewLoadTimeExtension";
     return extensions;
 }
 
+- (NSString *)targetEmptyViewWithControllerKey:(NSString *)key{
+    NSDictionary *items = [self configureRootDict];
+    NSString *targetEmptyView = items[key][kTargetSubViewEmpty];
+    return targetEmptyView;
+}
+
 - (NSDictionary *)configureRootDict{
     if ([self.configCache objectForKey:kConfigCache]) {
         return [self.configCache objectForKey:kConfigCache];
@@ -65,11 +72,33 @@ static NSString *const kYYViewLoadTimeExtensions = @"YYViewLoadTimeExtension";
     NSDictionary *rootDict = @{
                                @"ViewController":@{
                                        @"TargetSubview" : @"UITableView",
-                                       @"TargetSubviewType" : @(0)
+                                       @"TargetSubviewType" : @(0),
+                                       @"TargetEmptyViewType":@"NoDataView"
                                        },
                                @"TempViewController":@{
                                        @"TargetSubview" : @"TempView",
-                                       @"TargetSubviewType" : @(1)
+                                       @"TargetSubviewType" : @(1),
+                                       @"TargetEmptyViewType":@"NoDataView"
+                                       },
+                               @"TempWebviewController":@{
+                                       @"TargetSubview" : @"WKWebView",
+                                       @"TargetSubviewType" : @(2),
+                                       @"TargetEmptyViewType":@"NoDataView"
+                                       },
+                               @"NoDataViewController":@{
+                                       @"TargetSubview" : @"UITableView",
+                                       @"TargetSubviewType" : @(0),
+                                       @"TargetEmptyViewType":@"NoDataView"
+                                       },
+//                               @"NoDataViewController":@{
+//                                       @"TargetSubview" : @"DataView",
+//                                       @"TargetSubviewType" : @(1),
+//                                       @"TargetEmptyViewType":@"NoDataView"
+//                                       },
+                               @"FatherViewController":@{
+                                       @"TargetSubview" : @"SuperView",
+                                       @"TargetSubviewType" : @(1),
+                                       @"TargetEmptyViewType":@"NoDataView"
                                        },
                                @"YYViewLoadTimeExtension":@[
                                        @"TListViewExtesion",

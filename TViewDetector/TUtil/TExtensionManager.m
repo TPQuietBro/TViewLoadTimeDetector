@@ -41,7 +41,6 @@
 }
 
 - (void)addDetectingExtension:(TBaseExtension<TViewLoadTimeProtocol> *)extension{
-    extension.detectedController = self.detectedController;
     if (extension && [extension respondsToSelector:@selector(type)]) {
         [self.extensions setObject:extension forKey:@([extension type])];
     }

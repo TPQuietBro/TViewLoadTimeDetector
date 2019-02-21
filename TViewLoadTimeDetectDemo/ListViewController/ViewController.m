@@ -9,6 +9,11 @@
 #import "ViewController.h"
 #import "TempCell.h"
 #import "TempViewController.h"
+#import "TempWebviewController.h"
+#import "ChildOneViewController.h"
+#import "ChildTwoViewController.h"
+#import "NoDataViewController.h"
+
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray *dataArray;
@@ -41,7 +46,7 @@ static NSString *const TempCellId = @"TempCell";
     [indicator startAnimating];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         sleep(3);
-        self.dataArray = @[@"123",@"456",@"789"];
+        self.dataArray = @[@"click to normalview",@"click to webview",@"click to ChildOneViewController" , @"click to ChildTwoViewController",@"click no data view"];
         dispatch_async(dispatch_get_main_queue(), ^{
             [indicator stopAnimating];
             [indicator removeFromSuperview];
@@ -51,7 +56,34 @@ static NSString *const TempCellId = @"TempCell";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [self.navigationController pushViewController:[TempViewController new] animated:YES];
+    switch (indexPath.row) {
+        case 0:
+        {
+            [self.navigationController pushViewController:[TempViewController new] animated:YES];
+        }
+            break;
+        case 1:
+        {
+            [self.navigationController pushViewController:[TempWebviewController new] animated:YES];
+        }
+            break;
+        case 2:
+        {
+            [self.navigationController pushViewController:[ChildOneViewController new] animated:YES];
+        }
+            break;
+        case 3:
+        {
+            [self.navigationController pushViewController:[ChildTwoViewController new] animated:YES];
+        }
+            break;
+        case 4:
+        {
+            [self.navigationController pushViewController:[NoDataViewController new] animated:YES];
+        }
+            break;
+    }
+    
 }
 
 @end
